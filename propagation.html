@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propagação de Infecção</title>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: black; /* fundo preto */
+        font-family: Arial, sans-serif;
+    }
+    .stats {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+    .map {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(10, 50px);
+        grid-template-rows: repeat(10, 50px);
+        gap: 2px;
+        border: 1px solid #ccc;
+        background-color: white;
+        padding: 10px;
+    }
+    .cell {
+        width: 50px;
+        height: 50px;
+        background-color: #99ccff; /* cor padrão da célula */
+        border: 1px solid #666;
+        transition: background-color 0.3s ease;
+    }
+    .database {
+        margin-top: 20px;
+        color: white;
+    }
+    .event-list {
+        list-style-type: none;
+        padding: 0;
+        max-height: 300px;
+        overflow-y: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+        border-radius: 5px;
+        padding: 10px;
+    }
+    .event-list li {
+        margin-bottom: 5px;
+    }
+</style>
+</head>
+<body>
+
+<div class="stats">
+    <p>Percentual de sobreviventes infectados: <span id="percentInfected">0%</span></p>
+    <p>Percentual de sobreviventes não infectados: <span id="percentNonInfected">100%</span></p>
+</div>
+
+<div class="map" id="map"></div>
+
+<div class="database">
+    <h2>Infecção com Grau de Eixo XEY</h2>
+    <ul class="event-list" id="infectionEvents"></ul>
+</div>
+
+<script>
+    const map = document.getElementById('map');
+    const cells = [];
+    const numRows = 10;
+    const numCols = 10;
+    let numInfected = 0;
+    let infectionEvents = [];
+    let eventCounter = 0;
+
+    // células do mapa
+    for (let row = 0; row < numRows; row++) {
+        for (let col = 0; col < numCols; col++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            map.appendChild(cell);
+            cells.push({ element: cell, infected: false, x: col + 1, y: row + 1 }); // coordenadas positivas
+        }
+    }
+
+// escolher uma célula aleatória e infectá-la
+function spreadInfection() {
+    setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * cells.length);
+        infectCell(randomIndex);
+        updateInfectionStats(); // atualiza os percentuais após cada infecção
+        registerInfectionEvent(randomIndex);
+    }, Math.random() * 5000); // intervalo aleatório entre 0 e 5 segundos
+}
+
+    // infectar uma célula
+    function infectCell(index) {
+        if (!cells[index].infected) {
+            cells[index].infected = true;
+            cells[index].element.style.backgroundColor = '#ff6666'; // cor de infecção
+            numInfected++;
+        }
+    }
+
+    // atualizar os percentuais de infecção
+    function updateInfectionStats() {
+        const totalCells = cells.length;
+        const percentInfected = (numInfected / totalCells) * 100;
+        const percentNonInfected = 100 - percentInfected;
+
+        document.getElementById('percentInfected').textContent = percentInfected.toFixed(2) + '%';
+        document.getElementById('percentNonInfected').textContent = percentNonInfected.toFixed(2) + '%';
+    }
+
+    // registrar evento de infecção
+    function registerInfectionEvent(index) {
+        const event = {
+            id: eventCounter++,
+            x: cells[index].x,
+            y: cells[index].y,
+            timestamp: new Date().toLocaleString()
+        };
+        infectionEvents.push(event);
+        simulateDatabaseUpdate(event); // simulação de atualização do banco de dados
+    }
+
+    // simulação de atualização do banco de dados
+    function simulateDatabaseUpdate(event) {
+        const eventList = document.getElementById('infectionEvents');
+        const listItem = document.createElement('li');
+        listItem.textContent = `ID: ${event.id}, Coordenadas: (${event.x}, ${event.y}), Hora: ${event.timestamp}`;
+        eventList.appendChild(listItem);
+    }
+
+    // propagação da infecção
+    spreadInfection();
+</script>
+
+</body>
+</html>
