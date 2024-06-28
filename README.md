@@ -1,6 +1,6 @@
 # TRZ-TheResidentZombie
 -----------------------------------------------
-**Api Rest que guarda informações de sobreviventes de um apocalipse zombie**
+**Api Rest que guarda informações de infecção em um apocalipse zombie**
 
 A Api fornece:
 - Percentual de sobreviventes infectados.
@@ -10,9 +10,10 @@ A Api fornece:
 
   **Linguagens utilizadas**
 
-Banco de dados > ...
+**Banco de dados** > ...
 
-BackEnd > ...
+**BackEnd** > ...
 
-Frontend > Html, css e javascript
+**Frontend** > Html, css e javascript
 
+![xey](XEY.png)
